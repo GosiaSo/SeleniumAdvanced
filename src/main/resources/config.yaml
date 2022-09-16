@@ -1,0 +1,20 @@
+browser:
+  browserName: chrome
+  headlessBrowser: false
+  webElementTimeout: 15
+
+environment:
+  dev:
+    envName: dev
+    appUrl:
+    active: false
+
+  test:
+    envName: dev
+    appUrl:
+    active: false
+
+  preprod:
+    envName: dev
+    appUrl:
+    active: false
