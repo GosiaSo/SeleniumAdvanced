@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
@@ -20,7 +20,8 @@ public class UserFactory {
         String email = fakeValuesService.bothify("????##@gmail.com");
 
         String password = faker.internet().password();
-        Date birthdate = faker.date().birthday();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        String birthdate = sdf.format(faker.date().birthday(18, 101));
         boolean receiveOffersConsent = new Random().nextBoolean();
         boolean customerDataPrivacyConsent = new Random().nextBoolean();
         boolean newsletterConsent = new Random().nextBoolean();
@@ -40,6 +41,6 @@ public class UserFactory {
     }
 
     public User getAlreadyRegisteredUser() {
-
+        return null;
     }
 }

@@ -1,7 +1,5 @@
 package models;
 
-import java.util.Date;
-
 public class User {
 
     private SocialTitle socialTitle;
@@ -41,7 +39,7 @@ public class User {
 
         private String email;
         private String password;
-        private Date birthdate;
+        private String birthdate;
         private boolean receiveOffersConsent;
         private boolean customerDataPrivacyConsent;
         private boolean newsletterConsent;
@@ -72,7 +70,7 @@ public class User {
             return this;
         }
 
-        public UserBuilder setBirthdate(Date birthdate) {
+        public UserBuilder setBirthdate(String birthdate) {
             this.birthdate = birthdate;
             return this;
         }
