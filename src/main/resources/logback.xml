@@ -1,0 +1,14 @@
+<configuration scan="true">
+    <property name="DEV_HOME" value="${user.dir}/log"/>
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %cyan(%logger{15}) - %green(%msg{15}) %n
+            </Pattern>
+        </layout>
+    </appender>
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
