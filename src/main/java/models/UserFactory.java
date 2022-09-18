@@ -8,11 +8,16 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
+import static models.User.SocialTitle.MRS;
+import static models.User.SocialTitle.randomSocialTitle;
+
 public class UserFactory {
 
     public User getRandomUser() {
         Faker faker = new Faker();
 
+
+        User.SocialTitle socialTitle = randomSocialTitle();
         String firstName = faker.name().firstName();
         String lastName = faker.name().lastName();
         FakeValuesService fakeValuesService = new FakeValuesService(
@@ -28,6 +33,7 @@ public class UserFactory {
         boolean generalConditionsConsent = new Random().nextBoolean();
 
         return new User.UserBuilder()
+                .setSocialTitle(socialTitle)
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setEmail(email)
@@ -41,6 +47,17 @@ public class UserFactory {
     }
 
     public User getAlreadyRegisteredUser() {
-        return null;
+        return new User.UserBuilder()
+                .setSocialTitle(MRS)
+                .setFirstName("Gosia")
+                .setLastName("So")
+                .setEmail("email@email.com")
+                .setPassword("hasło-masło")
+                .setBirthdate("04/10/2000")
+                .setReceiveOffersConsent(true)
+                .setCustomerDataPrivacyConsent(false)
+                .setNewsletterConsent(false)
+                .setGeneralConditionsConsent(true)
+                .build();
     }
 }

@@ -1,5 +1,8 @@
 package models;
 
+import java.util.List;
+import java.util.Random;
+
 public class User {
 
     private SocialTitle socialTitle;
@@ -28,8 +31,33 @@ public class User {
         this.generalConditionsConsent = generalConditionsConsent;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "socialTitle=" + socialTitle +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", birthdate='" + birthdate + '\'' +
+                ", receiveOffersConsent=" + receiveOffersConsent +
+                ", customerDataPrivacyConsent=" + customerDataPrivacyConsent +
+                ", newsletterConsent=" + newsletterConsent +
+                ", generalConditionsConsent=" + generalConditionsConsent +
+                '}';
+    }
+
     enum SocialTitle {
-        MR, MRS
+        MR, MRS;
+
+        private static final List<SocialTitle> VALUES =
+                List.of(values());
+        private static final int SIZE = VALUES.size();
+        private static final Random RANDOM = new Random();
+
+        public static SocialTitle randomSocialTitle() {
+            return VALUES.get(RANDOM.nextInt(SIZE));
+        }
     }
 
     public static class UserBuilder {
