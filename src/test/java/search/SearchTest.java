@@ -18,9 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SearchTest extends BaseTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchTest.class);
-    private static final ProductTilePage PRODUCT_TILE_PAGE = new ProductTilePage(driver);
-    private static final SearchEnginePage SEARCH_ENGINE_PAGE = new SearchEnginePage(driver);
-    private static final String SEARCH_INPUT = "HUMMINGBIRD";
 
     @Test
         // test for test user factory
@@ -36,17 +33,21 @@ public class SearchTest extends BaseTest {
     @Tag("search")
     @Tag("regression")
     void checkResultOfSearch() {
-        final int initialNumberOfElements = PRODUCT_TILE_PAGE.getAllProductTiles().size();
 
-        WebElement randomProductFromList = PRODUCT_TILE_PAGE.getRandomProductFromList();
-        String nameOfRandomProduct = PRODUCT_TILE_PAGE.getNameOfProduct(randomProductFromList);
+        ProductTilePage productTilePage = new ProductTilePage(driver);
+        SearchEnginePage searchEnginePage = new SearchEnginePage(driver);
 
-        SEARCH_ENGINE_PAGE.useSearchEngine(nameOfRandomProduct);
-        SEARCH_ENGINE_PAGE.enterSearch();
-        if (!PRODUCT_TILE_PAGE.checkIfSearchFundItems(initialNumberOfElements)) {
+        final int initialNumberOfElements = productTilePage.getAllProductTiles().size();
+
+        WebElement randomProductFromList = productTilePage.getRandomProductFromList();
+        String nameOfRandomProduct = productTilePage.getNameOfProduct(randomProductFromList);
+
+        searchEnginePage.useSearchEngine(nameOfRandomProduct);
+        searchEnginePage.enterSearch();
+        if (!productTilePage.checkIfSearchFundItems(initialNumberOfElements)) {
             assertThat(Boolean.TRUE).isEqualTo(Boolean.FALSE);
         }
-        String result = PRODUCT_TILE_PAGE.getNameOfProduct(PRODUCT_TILE_PAGE.retrieveSpecificTile(nameOfRandomProduct));
+        String result = productTilePage.getNameOfProduct(productTilePage.retrieveSpecificTile(nameOfRandomProduct));
         assertThat(result).isEqualTo(nameOfRandomProduct);
     }
 
@@ -54,8 +55,12 @@ public class SearchTest extends BaseTest {
     @Tag("search")
     @Tag("regression")
     void checkDropdownSearch() {
-        SEARCH_ENGINE_PAGE.useSearchEngine(SEARCH_INPUT);
-        List<String> autocompleteSearchItems = SEARCH_ENGINE_PAGE.retrieveAutocompleteSearchItems(SEARCH_INPUT);
+        final String SEARCH_INPUT = "HUMMINGBIRD";
+        ProductTilePage productTilePage = new ProductTilePage(driver);
+        SearchEnginePage searchEnginePage = new SearchEnginePage(driver);
+
+        searchEnginePage.useSearchEngine(SEARCH_INPUT);
+        List<String> autocompleteSearchItems = searchEnginePage.retrieveAutocompleteSearchItems(SEARCH_INPUT);
 
         boolean flag = Boolean.TRUE;
         for (String listItem : autocompleteSearchItems) {
