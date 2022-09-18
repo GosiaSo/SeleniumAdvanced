@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pages.common.HeaderPage;
+import pages.common.SearchEnginePage;
 import pages.homepage.ProductTilePage;
 
 import java.util.List;
@@ -18,6 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SearchTest extends BaseTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchTest.class);
+    private static final ProductTilePage PRODUCT_TILE_PAGE = new ProductTilePage(driver);
+    private static final SearchEnginePage SEARCH_ENGINE_PAGE = new SearchEnginePage(driver);
+    private static final String SEARCH_INPUT = "HUMMINGBIRD";
 
     @Test
         // test for test user factory
@@ -33,21 +36,17 @@ public class SearchTest extends BaseTest {
     @Tag("search")
     @Tag("regression")
     void checkResultOfSearch() {
+        final int initialNumberOfElements = PRODUCT_TILE_PAGE.getAllProductTiles().size();
 
-        ProductTilePage productTilePage = new ProductTilePage(driver);
-        HeaderPage headerPage = new HeaderPage(driver);
+        WebElement randomProductFromList = PRODUCT_TILE_PAGE.getRandomProductFromList();
+        String nameOfRandomProduct = PRODUCT_TILE_PAGE.getNameOfProduct(randomProductFromList);
 
-        final int initialNumberOfElements = productTilePage.getAllProductTiles().size();
-
-        WebElement randomProductFromList = productTilePage.getRandomProductFromList();
-        String nameOfRandomProduct = productTilePage.getNameOfProduct(randomProductFromList);
-
-        headerPage.useSearchEngine(nameOfRandomProduct);
-        headerPage.enterSearch();
-        if (!productTilePage.checkIfSearchFundItems(initialNumberOfElements)) {
+        SEARCH_ENGINE_PAGE.useSearchEngine(nameOfRandomProduct);
+        SEARCH_ENGINE_PAGE.enterSearch();
+        if (!PRODUCT_TILE_PAGE.checkIfSearchFundItems(initialNumberOfElements)) {
             assertThat(Boolean.TRUE).isEqualTo(Boolean.FALSE);
         }
-        String result = productTilePage.getNameOfProduct(productTilePage.retrieveSpecificTile(nameOfRandomProduct));
+        String result = PRODUCT_TILE_PAGE.getNameOfProduct(PRODUCT_TILE_PAGE.retrieveSpecificTile(nameOfRandomProduct));
         assertThat(result).isEqualTo(nameOfRandomProduct);
     }
 
@@ -55,12 +54,8 @@ public class SearchTest extends BaseTest {
     @Tag("search")
     @Tag("regression")
     void checkDropdownSearch() {
-        final String SEARCH_INPUT = "HUMMINGBIRD";
-        ProductTilePage productTilePage = new ProductTilePage(driver);
-        HeaderPage headerPage = new HeaderPage(driver);
-
-        headerPage.useSearchEngine(SEARCH_INPUT);
-        List<String> autocompleteSearchItems = headerPage.retrieveAutocompleteSearchItems(SEARCH_INPUT);
+        SEARCH_ENGINE_PAGE.useSearchEngine(SEARCH_INPUT);
+        List<String> autocompleteSearchItems = SEARCH_ENGINE_PAGE.retrieveAutocompleteSearchItems(SEARCH_INPUT);
 
         boolean flag = Boolean.TRUE;
         for (String listItem : autocompleteSearchItems) {
