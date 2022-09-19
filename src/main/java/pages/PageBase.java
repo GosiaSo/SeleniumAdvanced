@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -30,6 +31,9 @@ public class PageBase {
     public Actions actions;
     public WebDriverWait wait;
 
+    public String getNameOfProduct(WebElement element) {
+        return element.findElement(By.cssSelector("a")).getAttribute("textContent");
+    }
     public void waitToBeClickable(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }

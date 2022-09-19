@@ -27,6 +27,9 @@ public class FiltersPage extends PageBase {
     @FindBy(xpath = "//div[contains(@class, 'ui-slider')]/a[2]")
     private WebElement rightSlider;
 
+    @FindBy(css = "#_desktop_search_filters_clear_all button")
+    private WebElement clearButton;
+
 
     public List<WebElement> getAllFacets() {
         return facets;
@@ -53,5 +56,10 @@ public class FiltersPage extends PageBase {
         actions.release();
         actions.perform();
 
+    }
+
+    public void clearFilters(){
+        waitToBeClickable(clearButton);
+        click(clearButton);
     }
 }
