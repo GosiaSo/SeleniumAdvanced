@@ -1,5 +1,6 @@
 package pages.common;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -39,8 +40,22 @@ public class HeaderPage extends PageBase {
         click(element);
     }
 
+    public void selectCategory(String category) {
+        for (int i = 0; i < mainCategoriesMenu.size(); i++) {
+            if(mainCategoriesMenu.get(i).getText().equalsIgnoreCase(category)){
+                click(mainCategoriesMenu.get(i));
+            }
+        }
+    }
+
     public String getNameOfMenuElement(WebElement element) {
         waitToBeVisible(element);
         return element.getText();
+    }
+
+    public void selectAdditionalCategory(WebElement element) {
+        waitToBeVisible(menu);
+        actions.moveToElement(element).perform();
+        List<WebElement> additionalCategories = element.findElements(By.className("category"));
     }
 }

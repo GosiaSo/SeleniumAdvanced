@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.categories.CategoryPage;
 import pages.common.HeaderPage;
-import pages.homepage.ProductTilePage;
+import pages.homepage.ProductsListPage;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class CategoriesTest extends BaseTest {
     void checkMainCategories() {
         final HeaderPage headerPage = new HeaderPage(driver);
         final CategoryPage categoryPage = new CategoryPage(driver);
-        final ProductTilePage productTilePage = new ProductTilePage(driver);
+        final ProductsListPage productsListPage = new ProductsListPage(driver);
 
         List<WebElement> mainCategoriesMenuItems = headerPage.getMainCategoriesMenuItems();
 
@@ -33,7 +33,7 @@ public class CategoriesTest extends BaseTest {
 
             areFacetsEnabled(categoryPage);
 
-            int allProductsInCategory = productTilePage.getAllProductTiles().size();
+            int allProductsInCategory = productsListPage.getAllProductTiles().size();
             int numberOfProductsOnSite = categoryPage.getNumberOfProducts();
             logger.info( "" + numberOfProductsOnSite);
             assertThat(allProductsInCategory).isEqualTo(numberOfProductsOnSite);

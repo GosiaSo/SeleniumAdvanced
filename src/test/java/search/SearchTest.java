@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.common.SearchEnginePage;
 import pages.homepage.ProductTilePage;
+import pages.homepage.ProductsListPage;
 
 import java.util.List;
 
@@ -34,20 +35,21 @@ public class SearchTest extends BaseTest {
     @Tag("regression")
     void checkResultOfSearch() {
 
-        ProductTilePage productTilePage = new ProductTilePage(driver);
+        ProductsListPage productsListPage = new ProductsListPage(driver);
         SearchEnginePage searchEnginePage = new SearchEnginePage(driver);
+        ProductTilePage productTilePage = new ProductTilePage(driver);
 
-        final int initialNumberOfElements = productTilePage.getAllProductTiles().size();
+        final int initialNumberOfElements = productsListPage.getAllProductTiles().size();
 
-        WebElement randomProductFromList = productTilePage.getRandomProductFromList();
+        WebElement randomProductFromList = productsListPage.getRandomProductFromList();
         String nameOfRandomProduct = productTilePage.getNameOfProduct(randomProductFromList);
 
         searchEnginePage.useSearchEngine(nameOfRandomProduct);
         searchEnginePage.enterSearch();
-        if (!productTilePage.checkIfSearchFundItems(initialNumberOfElements)) {
+        if (!productsListPage.checkIfSearchFundItems(initialNumberOfElements)) {
             assertThat(Boolean.TRUE).isEqualTo(Boolean.FALSE);
         }
-        String result = productTilePage.getNameOfProduct(productTilePage.retrieveSpecificTile(nameOfRandomProduct));
+        String result = productTilePage.getNameOfProduct(productsListPage.retrieveSpecificTile(nameOfRandomProduct));
         assertThat(result).isEqualTo(nameOfRandomProduct);
     }
 
@@ -56,7 +58,7 @@ public class SearchTest extends BaseTest {
     @Tag("regression")
     void checkDropdownSearch() {
         final String SEARCH_INPUT = "HUMMINGBIRD";
-        ProductTilePage productTilePage = new ProductTilePage(driver);
+        ProductsListPage productsListPage = new ProductsListPage(driver);
         SearchEnginePage searchEnginePage = new SearchEnginePage(driver);
 
         searchEnginePage.useSearchEngine(SEARCH_INPUT);

@@ -1,6 +1,5 @@
 package pages.homepage;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -18,42 +17,22 @@ public class ProductTilePage extends PageBase {
         super(driver);
     }
 
-    @FindBy(css = ".product-title")
-    private List<WebElement> productTileNames;
+    @FindBy(css = "div.product-price-and-shipping > span")
+    private List<WebElement> productPrices;
 
-
-    public List<WebElement> getAllProductTiles() {
-        return productTileNames;
-    }
-
-    public WebElement retrieveSpecificTile(String itemName) {
-        for (WebElement productTile : productTileNames) {
-            String productName = getNameOfProduct(productTile);
-            if (productName.equalsIgnoreCase(itemName)) {
-                logger.info("Found specific item: " + productTile.getAttribute("textContent"));
-                return productTile;
-            }
+    public double checkRangesOfPrices(WebElement element) {
+        waitToBeVisible(element);
+        String priceText = element.getText();
+        if (priceText.startsWith("$")) {
+            String substring = priceText.substring(priceText.indexOf("$") + 1);
+            double price = Double.parseDouble(substring.trim());
+            logger.info("Actual item price: " + price);
+            return price;
         }
-        logger.info("There is no such product item named: " + itemName);
-        return null;
+        return -1;
     }
 
-    public boolean checkIfSearchFundItems(int initialNumberOfElements) {
-        int size = getAllProductTiles().size();
-        if (initialNumberOfElements > size) {
-            logger.debug("Search engine found " + size + " items.");
-            return Boolean.TRUE;
-        } else {
-            logger.warn("Search engine found no items.");
-        }
-        return Boolean.FALSE;
-    }
-
-    public WebElement getRandomProductFromList() {
-        return getRandomElement(productTileNames);
-    }
-
-    public String getNameOfProduct(WebElement element) {
-        return element.findElement(By.cssSelector("a")).getAttribute("textContent");
+    public List<WebElement> getProductPrices() {
+        return productPrices;
     }
 }
