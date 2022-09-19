@@ -34,6 +34,10 @@ public class PageBase {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
+    public void waitToBeVisible(WebElement element) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
     public void click(WebElement element) {
         logger.info("Clicking on: " + element.getText());
         element.click();

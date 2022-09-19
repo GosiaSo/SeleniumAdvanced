@@ -1,6 +1,6 @@
 package search;
 
-import BaseTest.BaseTest;
+import basetest.BaseTest;
 import models.User;
 import models.UserFactory;
 import org.junit.jupiter.api.Tag;

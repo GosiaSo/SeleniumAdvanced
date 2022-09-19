@@ -1,4 +1,4 @@
-package BaseTest;
+package basetest;
 
 import config.AppProperties;
 import config.DriverFactory;

@@ -1,7 +1,5 @@
 package pages.common;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,43 +7,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.PageBase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HeaderPage extends PageBase {
 
     private static final Logger logger = LoggerFactory.getLogger(HeaderPage.class);
+
     public HeaderPage(WebDriver driver) {
         super(driver);
     }
 
-    @FindBy(css = "#search_widget [type=\"text\"]")
-    private WebElement searchInput;
+    @FindBy(css = "a[data-depth='0']")
+    private List<WebElement> mainCategoriesMenu;
 
-    @FindBy(css = "#search_widget button")
-    private WebElement submitSearchButton;
+    @FindBy(css = "a[data-depth='1']")
+    private List<WebElement> additionalCategoryMenuItems;
+    @FindBy(css = ".top-menu")
+    private WebElement menu;
 
-    @FindBy(css = ".ui-autocomplete li ")
-    private List<WebElement> autocompleteList;
 
-
-    public void useSearchEngine(String searchText) {
-        sendKeysWithClear(searchInput, searchText);
+    public List<WebElement> getMainCategoriesMenuItems() {
+        waitToBeVisible(menu);
+        return mainCategoriesMenu;
     }
 
-    public void enterSearch() {
-        actions.keyDown(Keys.ENTER).perform();
+    public List<WebElement> getSecondLevelMenuItems() {
+        return additionalCategoryMenuItems;
     }
 
-    public List<String> retrieveAutocompleteSearchItems(String searchText) {
-        List<String> autocompleteSearchItems = new ArrayList<>();
-        useSearchEngine(searchText);
-        for (WebElement webElement : autocompleteList) {
-            waitToBeClickable(webElement);
-            String dropdownItem = webElement.findElement(By.cssSelector("span.product")).getText();
-            autocompleteSearchItems.add(dropdownItem);
-            logger.debug(dropdownItem);
-        }
-        return autocompleteSearchItems;
+    public void selectCategory(WebElement element) {
+        click(element);
+    }
+
+    public String getNameOfMenuElement(WebElement element) {
+        waitToBeVisible(element);
+        return element.getText();
     }
 }
