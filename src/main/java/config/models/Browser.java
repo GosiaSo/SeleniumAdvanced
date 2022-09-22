@@ -20,7 +20,7 @@ public class Browser {
         return properties;
     }
 
-    enum BrowserName{
-        CHROME, FIREFOX, IE, EDGE
-    }
+//    enum BrowserName{
+//        CHROME, FIREFOX, IE, EDGE
+//    }
 }

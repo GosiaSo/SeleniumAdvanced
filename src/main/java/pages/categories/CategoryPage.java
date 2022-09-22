@@ -41,7 +41,7 @@ public class CategoryPage extends PageBase {
 
     public int getNumberOfProducts() {
         String totalProductsText = numberOfProducts.getText().trim().toLowerCase();
-        int index = totalProductsText.indexOf("products");
+        int index = totalProductsText.indexOf("product");
         String number = totalProductsText.substring(index - 3, index).trim();
         logger.info("There are " + number + " products.");
         return Integer.parseInt(number);
