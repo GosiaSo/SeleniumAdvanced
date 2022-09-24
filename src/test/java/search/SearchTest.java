@@ -27,7 +27,7 @@ public class SearchTest extends BaseTest {
         UserFactory userFactory = new UserFactory();
         User randomUser = userFactory.getRandomUser();
         logger.debug(randomUser.toString());
-        assertThat(actualTitle).isEqualTo("TesterSii");
+        assertThat(actualTitle).isEqualTo("Search");
     }
 
     @Test
