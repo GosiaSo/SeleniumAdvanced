@@ -37,7 +37,7 @@ public class SearchEnginePage extends PageBase {
         actions.keyDown(Keys.ENTER).perform();
     }
 
-    public List<String> retrieveAutocompleteSearchItems(String searchText) {
+    public List<String> getAutocompleteSearchItems(String searchText) {
         List<String> autocompleteSearchItems = new ArrayList<>();
         useSearchEngine(searchText);
         for (WebElement webElement : autocompleteList) {

@@ -5,7 +5,6 @@ import models.User;
 import models.UserFactory;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.common.SearchEnginePage;
@@ -39,17 +38,16 @@ public class SearchTest extends BaseTest {
         SearchEnginePage searchEnginePage = new SearchEnginePage(driver);
         ProductTilePage productTilePage = new ProductTilePage(driver);
 
-        final int initialNumberOfElements = productsListPage.getAllProductTiles().size();
+        int initialNumberOfElements = productsListPage.getNumberOfProducts();
 
-        WebElement randomProductFromList = productsListPage.getRandomProductFromList();
-        String nameOfRandomProduct = productTilePage.getNameOfProduct(randomProductFromList);
+        String nameOfRandomProduct = productTilePage.getNameOfRandomProduct(productsListPage);
 
         searchEnginePage.useSearchEngine(nameOfRandomProduct);
         searchEnginePage.enterSearch();
         if (!productsListPage.checkIfSearchFundItems(initialNumberOfElements)) {
             assertThat(Boolean.TRUE).isEqualTo(Boolean.FALSE);
         }
-        String result = productTilePage.getNameOfProduct(productsListPage.retrieveSpecificTile(nameOfRandomProduct));
+        String result = productTilePage.getNameOfProduct(productsListPage.getSpecificTile(nameOfRandomProduct));
         assertThat(result).isEqualTo(nameOfRandomProduct);
     }
 
@@ -58,11 +56,10 @@ public class SearchTest extends BaseTest {
     @Tag("regression")
     void checkDropdownSearch() {
         final String SEARCH_INPUT = "HUMMINGBIRD";
-        ProductsListPage productsListPage = new ProductsListPage(driver);
         SearchEnginePage searchEnginePage = new SearchEnginePage(driver);
 
         searchEnginePage.useSearchEngine(SEARCH_INPUT);
-        List<String> autocompleteSearchItems = searchEnginePage.retrieveAutocompleteSearchItems(SEARCH_INPUT);
+        List<String> autocompleteSearchItems = searchEnginePage.getAutocompleteSearchItems(SEARCH_INPUT);
 
         boolean flag = Boolean.TRUE;
         for (String listItem : autocompleteSearchItems) {

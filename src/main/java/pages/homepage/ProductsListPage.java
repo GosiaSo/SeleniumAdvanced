@@ -25,7 +25,11 @@ public class ProductsListPage extends PageBase {
         return productTileNames;
     }
 
-    public WebElement retrieveSpecificTile(String itemName) {
+    public int getNumberOfProducts(){
+        return getAllProductTiles().size();
+    }
+
+    public WebElement getSpecificTile(String itemName) {
         for (WebElement productTile : productTileNames) {
             String productName = getNameOfProduct(productTile);
             if (productName.equalsIgnoreCase(itemName)) {
