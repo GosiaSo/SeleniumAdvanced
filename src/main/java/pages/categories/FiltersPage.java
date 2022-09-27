@@ -48,7 +48,7 @@ public class FiltersPage extends PageBase {
         }
         actions.release();
         actions.perform();
-
+        waitToBeVisible(activeFiltersLabel);
     }
 
     public void clearFilters() {
