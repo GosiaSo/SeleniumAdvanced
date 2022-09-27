@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +33,17 @@ public class PageBase {
     public String getNameOfProduct(WebElement element) {
         return element.findElement(By.cssSelector("a")).getAttribute("textContent");
     }
+
     public void waitToBeClickable(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
     public void waitToBeVisible(WebElement element) {
         wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    public void waitForInvisibilityOf(WebElement element) {
+        wait.until(ExpectedConditions.invisibilityOf(element));
     }
 
     public void click(WebElement element) {
@@ -64,9 +68,5 @@ public class PageBase {
 
     public WebElement getRandomElement(List<WebElement> elements) {
         return elements.get(new Random().nextInt(elements.size()));
-    }
-
-    public Select getSelect(WebElement element) {
-        return new Select(element);
     }
 }
