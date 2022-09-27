@@ -21,33 +21,26 @@ public class FiltersPage extends PageBase {
     @FindBy(css = "p.facet-title")
     private List<WebElement> facets;
 
-    @FindBy(xpath = "//div[contains(@class, 'ui-slider')]/a[1]")
-    private WebElement leftSlider;
-
     @FindBy(xpath = "//div[contains(@class, 'ui-slider')]/a[2]")
     private WebElement rightSlider;
 
     @FindBy(css = "#_desktop_search_filters_clear_all button")
     private WebElement clearButton;
 
+    @FindBy(css = "#js-active-search-filters.active_filters")
+    private WebElement activeFiltersLabel;
 
-    public List<WebElement> getAllFacets() {
-        return facets;
-    }
+    @FindBy(css = "ul[data-slider-label='Price'] li p")
+    private WebElement rangeFilterLabel;
 
-    public WebElement getFacet(String facet) {
-        for (int i = 0; i < facets.size(); i++) {
-            if (facets.get(i).getText().equalsIgnoreCase(facet)) {
-                logger.info("Found facet element: " + facet);
-                return facets.get(i);
-            }
-        }
-        return null;
+    public int getMaxRangeFilter() {
+        String text = rangeFilterLabel.getText().trim();
+        String substring = text.substring(text.lastIndexOf("$") + 1, text.lastIndexOf(("."))).trim();
+        return Integer.parseInt(substring);
     }
 
     public void slidePriceRightSlider(int maxPrice) {
-        int minRange = 9;
-        int maxRange = 29;
+        int maxRange = getMaxRangeFilter();
         int percent = (maxRange - maxPrice);
         actions.clickAndHold(rightSlider);
         for (int i = 0; i < percent; i++) {
@@ -58,8 +51,10 @@ public class FiltersPage extends PageBase {
 
     }
 
-    public void clearFilters(){
+    public void clearFilters() {
         waitToBeClickable(clearButton);
         click(clearButton);
+        logger.info("Cleaning filters.");
+        waitForInvisibilityOf(activeFiltersLabel);
     }
 }

@@ -24,42 +24,22 @@ public class FiltersTest extends BaseTest {
     @Tag("regression")
     void checkPriceFacet() {
 
-        final HeaderPage headerPage = new HeaderPage(driver);
-        final ProductsListPage productsListPage = new ProductsListPage(driver);
-        final FiltersPage filtersPage = new FiltersPage(driver);
-        final ProductTilePage productTilePage = new ProductTilePage(driver);
+        HeaderPage headerPage = new HeaderPage(driver);
+        ProductsListPage productsListPage = new ProductsListPage(driver);
+        FiltersPage filtersPage = new FiltersPage(driver);
+        ProductTilePage productTilePage = new ProductTilePage(driver);
 
         headerPage.selectCategory("ART");
-        int initialNumberOfProducts = productsListPage.getAllProductTiles().size();
+        int initialNumberOfProducts = productsListPage.getNumberOfProducts();
         filtersPage.slidePriceRightSlider(10);
 
-        List<WebElement> allProductTiles = productTilePage.getProductPrices();
-        checkIfItemsPricesMatch(productTilePage, allProductTiles, 9.00, 10.00);
+        boolean ifItemsPricesAreBetween = productsListPage.checkIfItemsPricesAreBetween(productTilePage, 9.00, 10.00);
+        assertThat(Boolean.TRUE).isEqualTo(ifItemsPricesAreBetween);
 
-        int numberOfFilteredProducts = productsListPage.getAllProductTiles().size();
+        int numberOfFilteredProducts = productsListPage.getNumberOfProducts();
         filtersPage.clearFilters();
-        try { //TODO co zrobić z tymy waitami lepiej?
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        int finalNumberOfProducts = productsListPage.getAllProductTiles().size();
+        int finalNumberOfProducts = productsListPage.getNumberOfProducts();
         logger.info("Initial number of products: " + initialNumberOfProducts +" | Number of filtered products: " + numberOfFilteredProducts + " | Final number of products after clear filters: " + finalNumberOfProducts);
         assertThat(initialNumberOfProducts).isEqualTo(finalNumberOfProducts);
-    }
-
-    private void checkIfItemsPricesMatch(ProductTilePage productTilePage, List<WebElement> allProductTiles, double minPrice, double maxPrice) {
-        try { //TODO co zrobić z tymy waitami lepiej?
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        for (int i = 0; i < allProductTiles.size(); i++) {
-            WebElement itemTile = allProductTiles.get(i);
-            double actualPrice = productTilePage.checkRangesOfPrices(itemTile);
-            logger.info("Expected item price range: $" + minPrice + " - $" + maxPrice);
-            assertThat(actualPrice).isBetween(minPrice, maxPrice);
-        }
     }
 }

@@ -2,12 +2,9 @@ package pages.homepage;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.PageBase;
-
-import java.util.List;
 
 public class ProductTilePage extends PageBase {
 
@@ -17,10 +14,7 @@ public class ProductTilePage extends PageBase {
         super(driver);
     }
 
-    @FindBy(css = "div.product-price-and-shipping > span")
-    private List<WebElement> productPrices;
-
-    public double checkRangesOfPrices(WebElement element) {
+    public double checkPriceOfItem(WebElement element) {
         waitToBeVisible(element);
         String priceText = element.getText();
         if (priceText.startsWith("$")) {
@@ -32,7 +26,8 @@ public class ProductTilePage extends PageBase {
         return -1;
     }
 
-    public List<WebElement> getProductPrices() {
-        return productPrices;
+    public String getNameOfRandomProduct(ProductsListPage productsListPage) {
+        WebElement randomProductFromList = productsListPage.getRandomProductFromList();
+        return getNameOfProduct(randomProductFromList);
     }
 }

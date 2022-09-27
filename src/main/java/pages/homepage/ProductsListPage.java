@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.PageBase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductsListPage extends PageBase {
@@ -20,12 +21,15 @@ public class ProductsListPage extends PageBase {
     @FindBy(css = ".product-title")
     private List<WebElement> productTileNames;
 
+    @FindBy(css = "div.product-price-and-shipping > span")
+    private List<WebElement> productPrices;
+
 
     public List<WebElement> getAllProductTiles() {
         return productTileNames;
     }
 
-    public int getNumberOfProducts(){
+    public int getNumberOfProducts() {
         return getAllProductTiles().size();
     }
 
@@ -54,5 +58,24 @@ public class ProductsListPage extends PageBase {
 
     public WebElement getRandomProductFromList() {
         return getRandomElement(productTileNames);
+    }
+
+    public List<WebElement> getProductPrices() {
+        return productPrices;
+    }
+
+    public boolean checkIfItemsPricesAreBetween(ProductTilePage productTilePage, double minPrice, double maxPrice) {
+        List<WebElement> allProductTiles = getProductPrices();
+
+        List<Boolean> flag = new ArrayList<>();
+        for (int i = 0; i < allProductTiles.size(); i++) {
+            WebElement itemTile = allProductTiles.get(i);
+            double actualPrice = productTilePage.checkPriceOfItem(itemTile);
+            logger.info("Expected item price range: $" + minPrice + " - $" + maxPrice);
+            if (actualPrice >= minPrice && actualPrice <= maxPrice) {
+                flag.add(Boolean.TRUE);
+            }
+        }
+        return !flag.contains(Boolean.FALSE);
     }
 }
