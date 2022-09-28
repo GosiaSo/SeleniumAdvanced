@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.common.SearchEnginePage;
-import pages.homepage.ProductTilePage;
-import pages.homepage.ProductsListPage;
+import pages.common.ProductTilePage;
+import pages.common.ProductsListPage;
 
 import java.util.List;
 

@@ -3,15 +3,12 @@ package filters;
 import basetest.BaseTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.categories.FiltersPage;
 import pages.common.HeaderPage;
-import pages.homepage.ProductTilePage;
-import pages.homepage.ProductsListPage;
-
-import java.util.List;
+import pages.common.ProductTilePage;
+import pages.common.ProductsListPage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
