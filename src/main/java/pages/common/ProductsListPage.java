@@ -33,7 +33,7 @@ public class ProductsListPage extends PageBase {
         return getAllProductTiles().size();
     }
 
-    public WebElement getSpecificTile(String itemName) {
+    public WebElement getSpecificProduct(String itemName) {
         for (WebElement productTile : productTileNames) {
             String productName = getNameOfProduct(productTile);
             if (productName.equalsIgnoreCase(itemName)) {
@@ -43,6 +43,11 @@ public class ProductsListPage extends PageBase {
         }
         logger.info("There is no such product item named: " + itemName);
         return null;
+    }
+
+    public void openSpecificProduct(String itemName){
+        WebElement product = getSpecificProduct("THE BEST IS YET POSTER");
+        click(product);
     }
 
     public boolean checkIfSearchFundItems(int initialNumberOfElements) {

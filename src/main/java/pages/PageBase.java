@@ -69,4 +69,9 @@ public class PageBase {
     public WebElement getRandomElement(List<WebElement> elements) {
         return elements.get(new Random().nextInt(elements.size()));
     }
+
+    public double getPriceFromText(String text){
+        String substring = text.substring(text.indexOf("$") + 1).trim();
+        return Double.parseDouble(substring);
+    }
 }

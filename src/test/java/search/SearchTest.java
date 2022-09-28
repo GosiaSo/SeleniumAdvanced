@@ -47,7 +47,7 @@ public class SearchTest extends BaseTest {
         if (!productsListPage.checkIfSearchFundItems(initialNumberOfElements)) {
             assertThat(Boolean.TRUE).isEqualTo(Boolean.FALSE);
         }
-        String result = productTilePage.getNameOfProduct(productsListPage.getSpecificTile(nameOfRandomProduct));
+        String result = productTilePage.getNameOfProduct(productsListPage.getSpecificProduct(nameOfRandomProduct));
         assertThat(result).isEqualTo(nameOfRandomProduct);
     }
 
