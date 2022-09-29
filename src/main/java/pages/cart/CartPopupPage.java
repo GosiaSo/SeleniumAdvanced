@@ -5,14 +5,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import pages.PageBase;
 
-public class CartPage extends PageBase {
+public class CartPopupPage extends PageBase {
 
-    public CartPage(WebDriver driver) {
+    public CartPopupPage(WebDriver driver) {
         super(driver);
     }
 
     @FindBy(css = ".cart-content-btn button")
-    private WebElement continueShopingButton;
+    private WebElement continueShoppingButton;
     @FindBy(css = ".product-name")
     private WebElement nameOfProduct;
 
@@ -31,9 +31,12 @@ public class CartPage extends PageBase {
     @FindBy(css = "span.cart-products-count")
     private WebElement productsCountCartIconHeader;
 
+    @FindBy(css = "#blockcart-modal .modal-header button.close")
+    private WebElement closeButton;
+
 
     public String getNameOfProduct() {
-        waitToBeVisible(continueShopingButton);
+        waitToBeVisible(continueShoppingButton);
         return nameOfProduct.getText();
     }
 
@@ -45,15 +48,13 @@ public class CartPage extends PageBase {
     public int getQuantityOfProduct() {
         String text = quantityOfProduct.getText().trim();
         String substring = text.substring(text.indexOf(":") + 1).trim();
-        int quantity = Integer.parseInt(substring);
-        return quantity;
+        return Integer.parseInt(substring);
     }
 
     public int getQuantityOfProductsInCart() {
         String text = quantityOfProductsInCart.getText();
         String substring = text.substring(text.lastIndexOf("items") - 3, text.lastIndexOf("items")).trim();
-        int quantity = Integer.parseInt(substring);
-        return quantity;
+        return Integer.parseInt(substring);
     }
 
     public double getTotalCartValue() {
@@ -61,13 +62,17 @@ public class CartPage extends PageBase {
         return getPriceFromText(text);
     }
 
-    public void clickContinueShopingButton() {
-        continueShopingButton.click();
+    public void clickContinueShoppingButton() {
+        continueShoppingButton.click();
     }
 
     public int getProductsCountFromCartIconHeader() {
         String text = productsCountCartIconHeader.getText().trim();
         String substring = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
         return Integer.parseInt(substring);
+    }
+
+    public void closePopupCart(){
+        click(closeButton);
     }
 }

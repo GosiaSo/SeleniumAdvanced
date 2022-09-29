@@ -7,11 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.PageBase;
 
-public class ProductTilePage extends PageBase {
+import java.util.Random;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductTilePage.class);
+public class ProductPage extends PageBase {
 
-    public ProductTilePage(WebDriver driver) {
+    private static final Logger logger = LoggerFactory.getLogger(ProductPage.class);
+
+    public ProductPage(WebDriver driver) {
         super(driver);
     }
 
@@ -21,12 +23,22 @@ public class ProductTilePage extends PageBase {
     @FindBy(xpath = "//button[contains(@class, 'touchspin-up')]")
     private WebElement quantityButtonUp;
 
+//    @FindBy(css = "div.product-container [itemprop='name']")
+//    private WebElement name;
+
     public void addToCartProduct() {
         click(addToCartButton);
     }
 
     public void setQuantity(int quantity) {
         for (int i = 0; i < quantity - 1; i++) {
+            click(quantityButtonUp);
+        }
+    }
+
+    public void setRandomQuantity() {
+        int n = new Random().nextInt(10);
+        for (int i = 0; i < n - 1; i++) {
             click(quantityButtonUp);
         }
     }

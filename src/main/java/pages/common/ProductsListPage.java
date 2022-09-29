@@ -47,6 +47,13 @@ public class ProductsListPage extends PageBase {
 
     public void openSpecificProduct(String itemName){
         WebElement product = getSpecificProduct("THE BEST IS YET POSTER");
+        logger.info("Clicking on: " + product.getText());
+        click(product);
+    }
+
+    public void openRandomProduct(){
+        WebElement product = getRandomElement(productTileNames);
+        logger.info("Clicking on: " + product.getText());
         click(product);
     }
 
@@ -69,13 +76,13 @@ public class ProductsListPage extends PageBase {
         return productPrices;
     }
 
-    public boolean checkIfItemsPricesAreBetween(ProductTilePage productTilePage, double minPrice, double maxPrice) {
+    public boolean checkIfItemsPricesAreBetween(ProductPage productPage, double minPrice, double maxPrice) {
         List<WebElement> allProductTiles = getProductPrices();
 
         List<Boolean> flag = new ArrayList<>();
         for (int i = 0; i < allProductTiles.size(); i++) {
             WebElement itemTile = allProductTiles.get(i);
-            double actualPrice = productTilePage.checkPriceOfItem(itemTile);
+            double actualPrice = productPage.checkPriceOfItem(itemTile);
             logger.info("Expected item price range: $" + minPrice + " - $" + maxPrice);
             if (actualPrice >= minPrice && actualPrice <= maxPrice) {
                 flag.add(Boolean.TRUE);

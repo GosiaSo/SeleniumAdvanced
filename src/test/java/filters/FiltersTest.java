@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.categories.FiltersPage;
 import pages.common.HeaderPage;
-import pages.common.ProductTilePage;
+import pages.common.ProductPage;
 import pages.common.ProductsListPage;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,13 +24,13 @@ public class FiltersTest extends BaseTest {
         HeaderPage headerPage = new HeaderPage(driver);
         ProductsListPage productsListPage = new ProductsListPage(driver);
         FiltersPage filtersPage = new FiltersPage(driver);
-        ProductTilePage productTilePage = new ProductTilePage(driver);
+        ProductPage productPage = new ProductPage(driver);
 
         headerPage.selectCategory("ART");
         int initialNumberOfProducts = productsListPage.getNumberOfProducts();
         filtersPage.slidePriceRightSlider(10);
 
-        boolean ifItemsPricesAreBetween = productsListPage.checkIfItemsPricesAreBetween(productTilePage, 9.00, 10.00);
+        boolean ifItemsPricesAreBetween = productsListPage.checkIfItemsPricesAreBetween(productPage, 9.00, 10.00);
         assertThat(Boolean.TRUE).isEqualTo(ifItemsPricesAreBetween);
 
         int numberOfFilteredProducts = productsListPage.getNumberOfProducts();

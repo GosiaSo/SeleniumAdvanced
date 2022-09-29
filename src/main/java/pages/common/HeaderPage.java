@@ -17,6 +17,12 @@ public class HeaderPage extends PageBase {
         super(driver);
     }
 
+    @FindBy(css = "#_desktop_logo")
+    private WebElement homeLogoButton;
+
+    @FindBy(css = "div.header a")
+    private WebElement cartIconButton;
+
     @FindBy(css = "a[data-depth='0']")
     private List<WebElement> mainCategoriesMenu;
 
@@ -102,6 +108,17 @@ public class HeaderPage extends PageBase {
 
         actions.moveToElement(mainCategory).build().perform();
         waitToBeVisible(additionalCategory);
+        logger.info("Clicking on: " + additionalCategory.getText());
         click(additionalCategory);
+    }
+
+    public void returnToHomePage(){
+        logger.info("Returning to homepage");
+        click(homeLogoButton);
+    }
+
+    public void goToCartPage(){
+        logger.info("Going to cart page");
+        click(cartIconButton);
     }
 }

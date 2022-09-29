@@ -47,7 +47,6 @@ public class PageBase {
     }
 
     public void click(WebElement element) {
-        logger.info("Clicking on: " + element.getText());
         element.click();
     }
 

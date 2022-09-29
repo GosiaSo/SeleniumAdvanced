@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.common.SearchEnginePage;
-import pages.common.ProductTilePage;
+import pages.common.ProductPage;
 import pages.common.ProductsListPage;
 
 import java.util.List;
@@ -36,18 +36,18 @@ public class SearchTest extends BaseTest {
 
         ProductsListPage productsListPage = new ProductsListPage(driver);
         SearchEnginePage searchEnginePage = new SearchEnginePage(driver);
-        ProductTilePage productTilePage = new ProductTilePage(driver);
+        ProductPage productPage = new ProductPage(driver);
 
         int initialNumberOfElements = productsListPage.getNumberOfProducts();
 
-        String nameOfRandomProduct = productTilePage.getNameOfRandomProduct(productsListPage);
+        String nameOfRandomProduct = productPage.getNameOfRandomProduct(productsListPage);
 
         searchEnginePage.useSearchEngine(nameOfRandomProduct);
         searchEnginePage.enterSearch();
         if (!productsListPage.checkIfSearchFundItems(initialNumberOfElements)) {
             assertThat(Boolean.TRUE).isEqualTo(Boolean.FALSE);
         }
-        String result = productTilePage.getNameOfProduct(productsListPage.getSpecificProduct(nameOfRandomProduct));
+        String result = productPage.getNameOfProduct(productsListPage.getSpecificProduct(nameOfRandomProduct));
         assertThat(result).isEqualTo(nameOfRandomProduct);
     }
 
