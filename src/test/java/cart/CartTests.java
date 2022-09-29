@@ -56,7 +56,7 @@ public class CartTests extends BaseTest {
         logger.info("Selected product: 3" + " | Actual product: " + actualQuantityOfProductsInCart);
         assertThat(actualQuantityOfProductsInCart).isEqualTo(3);
 
-        double actualTotalCartValue = cartPopupPage.getTotalCartValue();
+        double actualTotalCartValue = cartPopupPage.getTotalItemsValue();
         logger.info("Selected product: 87.0" + " | Actual product: " + actualTotalCartValue);
         assertThat(actualTotalCartValue).isEqualTo(87.0);
 
@@ -79,7 +79,8 @@ public class CartTests extends BaseTest {
 
         List<Product> products = new ArrayList<>();
         double totalPrice = 0;
-        for (int i = 0; i < 5; i++) {
+//TODO ZMIENIĆ Z POWROTEM PĘTLE NA 5!!!!!!!!!!!!!!!!!!!!!!
+        for (int i = 0; i < 1; i++) {
 
             productsListPage.openRandomProduct();
             productPage.setRandomQuantity();
@@ -100,7 +101,7 @@ public class CartTests extends BaseTest {
         // tutaj tworzę nowy obiekt Cart z tej strony shopping cart i porównam
         headerPage.goToCartPage();
 
-        List<Product> productInShoppingCartPage = new ArrayList<>();
+        List<Product> productInShoppingCartPage = shoppingCartPage.getAllProductsFromShoppingCart();
         double totalShoppingCartValue = shoppingCartPage.getTotalCartValue();
         Cart shoppingCart = new Cart(productInShoppingCartPage, totalShoppingCartValue);
 

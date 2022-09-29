@@ -57,7 +57,7 @@ public class CartPopupPage extends PageBase {
         return Integer.parseInt(substring);
     }
 
-    public double getTotalCartValue() {
+    public double getTotalItemsValue() {
         String text = totalProductsValue.getText().trim();
         return getPriceFromText(text);
     }
