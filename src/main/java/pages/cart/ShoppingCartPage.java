@@ -21,9 +21,24 @@ public class ShoppingCartPage extends PageBase {
     @FindBy(css = ".cart-item")
     private List<WebElement> allItemsOnList;
 
+    @FindBy(css = "#cart-subtotal-shipping span:nth-child(2)")
+    private WebElement shippingCost;
+
+    @FindBy(css = ".checkout a")
+    private WebElement proceedToCheckoutButton;
+
     public double getTotalCartValue() {
         String text = totalValue.getText().trim();
         return getPriceFromText(text);
+    }
+
+    public double getShippingCost() {
+        String text = shippingCost.getText().trim();
+        return getPriceFromText(text);
+    }
+
+    public void proceedToCheckout(){
+        click(proceedToCheckoutButton);
     }
 
     public List<SingleItemCartPage> getAllItemsOnCartList() {

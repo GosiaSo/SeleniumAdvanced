@@ -20,6 +20,9 @@ public class HeaderPage extends PageBase {
     @FindBy(css = "#_desktop_logo")
     private WebElement homeLogoButton;
 
+    @FindBy(css = ".user-info a")
+    private WebElement signInButton;
+
     @FindBy(css = "div.header a")
     private WebElement cartIconButton;
 
@@ -120,5 +123,9 @@ public class HeaderPage extends PageBase {
     public void goToCartPage(){
         logger.info("Going to cart page");
         click(cartIconButton);
+    }
+    public void goToSignInPage(){
+        logger.info("Going to sign in page");
+        click(signInButton);
     }
 }

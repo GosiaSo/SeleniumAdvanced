@@ -47,13 +47,20 @@ public class UserFactory {
     }
 
     public User getAlreadyRegisteredUser() {
+
+        String name = "Gosia";
+        String surname = "So";
+        String email = "email@email.com";
+        String password = "hasło-masło";
+        String birthdate = "04/10/2000";
+
         return new User.UserBuilder()
                 .setSocialTitle(MRS)
-                .setFirstName("Gosia")
-                .setLastName("So")
-                .setEmail("email@email.com")
-                .setPassword("hasło-masło")
-                .setBirthdate("04/10/2000")
+                .setFirstName(name)
+                .setLastName(surname)
+                .setEmail(email)
+                .setPassword(password)
+                .setBirthdate(birthdate)
                 .setReceiveOffersConsent(true)
                 .setCustomerDataPrivacyConsent(false)
                 .setNewsletterConsent(false)

@@ -10,11 +10,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pages.cart.BillingAddressPage;
 import pages.cart.CartPopupPage;
 import pages.cart.ShoppingCartPage;
 import pages.common.HeaderPage;
 import pages.common.ProductPage;
 import pages.common.ProductsListPage;
+import pages.signin.LoginPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +98,7 @@ public class CartTests extends BaseTest {
         }
 
         headerPage.goToCartPage();
+        totalPrice = totalPrice + shoppingCartPage.getShippingCost();
         Cart actualCart = new Cart(products, totalPrice); // obiekt stworzony z produktów dodawanych do koszyka w trakcie
 
         // tutaj tworzę nowy obiekt Cart z tej strony shopping cart i porównam
@@ -108,5 +111,37 @@ public class CartTests extends BaseTest {
 
         // porównanie obiektów całych
         assertThat(actualCart).usingRecursiveComparison().isEqualTo(shoppingCart);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = "THE BEST IS YET POSTER")
+    @Tag("cart")
+    @Tag("regression")
+    void checkout() {
+
+        HeaderPage headerPage = new HeaderPage(driver);
+        ProductsListPage productsListPage = new ProductsListPage(driver);
+        CartPopupPage cartPopupPage = new CartPopupPage(driver);
+        ProductPage productPage = new ProductPage(driver);
+        ShoppingCartPage shoppingCartPage = new ShoppingCartPage(driver);
+        LoginPage loginPage = new LoginPage(driver);
+        BillingAddressPage billingAddressPage = new BillingAddressPage(driver);
+
+        headerPage.goToSignInPage();
+        loginPage.loginAlreadyCreatedUser();
+
+        headerPage.returnToHomePage();
+        productsListPage.openSpecificProduct("THE BEST IS YET POSTER");
+        productPage.addToCartProduct();
+
+        cartPopupPage.clickProceedToCheckoutButton();
+        shoppingCartPage.proceedToCheckout();
+
+        billingAddressPage.fillBillingForm();
+        billingAddressPage.confirmDeliveryOption();
+        billingAddressPage.selectPayByCheckOption();
+        billingAddressPage.acceptTermsAndConditions();
+        billingAddressPage.placeOrder();
+
     }
 }

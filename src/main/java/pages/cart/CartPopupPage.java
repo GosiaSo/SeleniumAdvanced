@@ -13,6 +13,9 @@ public class CartPopupPage extends PageBase {
 
     @FindBy(css = ".cart-content-btn button")
     private WebElement continueShoppingButton;
+
+    @FindBy(css = ".cart-content-btn a")
+    private WebElement proceedToCheckoutButton;
     @FindBy(css = ".product-name")
     private WebElement nameOfProduct;
 
@@ -64,6 +67,11 @@ public class CartPopupPage extends PageBase {
 
     public void clickContinueShoppingButton() {
         continueShoppingButton.click();
+    }
+
+    public void clickProceedToCheckoutButton() {
+        waitToBeClickable(proceedToCheckoutButton);
+        proceedToCheckoutButton.click();
     }
 
     public int getProductsCountFromCartIconHeader() {
