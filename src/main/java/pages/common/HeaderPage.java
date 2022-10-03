@@ -26,6 +26,9 @@ public class HeaderPage extends PageBase {
     @FindBy(css = "div.header a")
     private WebElement cartIconButton;
 
+    @FindBy(css = ".account")
+    private WebElement signedUserAccountButton;
+
     @FindBy(css = "a[data-depth='0']")
     private List<WebElement> mainCategoriesMenu;
 
@@ -115,17 +118,23 @@ public class HeaderPage extends PageBase {
         click(additionalCategory);
     }
 
-    public void returnToHomePage(){
+    public void returnToHomePage() {
         logger.info("Returning to homepage");
         click(homeLogoButton);
     }
 
-    public void goToCartPage(){
+    public void goToCartPage() {
         logger.info("Going to cart page");
         click(cartIconButton);
     }
-    public void goToSignInPage(){
+
+    public void goToSignInPage() {
         logger.info("Going to sign in page");
         click(signInButton);
+    }
+
+    public void goToAccountPage() {
+        logger.info("Going to acount page");
+        click(signedUserAccountButton);
     }
 }

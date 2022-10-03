@@ -17,6 +17,45 @@ public class User {
     private boolean newsletterConsent;
     private boolean generalConditionsConsent;
 
+    public SocialTitle getSocialTitle() {
+        return socialTitle;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public boolean isReceiveOffersConsent() {
+        return receiveOffersConsent;
+    }
+
+    public boolean isCustomerDataPrivacyConsent() {
+        return customerDataPrivacyConsent;
+    }
+
+    public boolean isNewsletterConsent() {
+        return newsletterConsent;
+    }
+
+    public boolean isGeneralConditionsConsent() {
+        return generalConditionsConsent;
+    }
 
     public User(SocialTitle socialTitle, String firstName, String lastName, String email, String password, String birthdate, boolean receiveOffersConsent, boolean customerDataPrivacyConsent, boolean newsletterConsent, boolean generalConditionsConsent) {
         this.socialTitle = socialTitle;

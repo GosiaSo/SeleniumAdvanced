@@ -1,10 +1,8 @@
 package cart;
 
 import basetest.BaseTest;
-import models.Cart;
-import models.Product;
-import models.ProductFactory;
-import org.checkerframework.checker.units.qual.A;
+import models.*;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +10,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.account.AccountPage;
+import pages.account.orderhistory.OrderDetailsPage;
+import pages.account.orderhistory.orderhistorytable.OrderHistoryPage;
+import pages.account.orderhistory.orderhistorytable.OrderHistoryRow;
 import pages.cart.BillingAddressPage;
 import pages.cart.CartPopupPage;
 import pages.cart.ShoppingCartPage;
@@ -21,13 +22,14 @@ import pages.common.ProductPage;
 import pages.common.ProductsListPage;
 import pages.signin.LoginPage;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartTests extends BaseTest {
     private static final Logger logger = LoggerFactory.getLogger(CartTests.class);
+    private static final User user = new UserFactory().getAlreadyRegisteredUser();
 
     @ParameterizedTest
     @Tag("cart")
@@ -122,12 +124,16 @@ public class CartTests extends BaseTest {
     @Tag("regression")
     void checkout(String product) {
         OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
+        OrderDetails orderDetailsFromCart = new OrderDetails();
 
-        logIn();
+        logIn(user);
         Cart cart = addProductToCart(product);
 
         confirmOrder();
         Cart cartStatusOnConfirmationPage = getCartStatusOnConfirmationPage();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        orderDetailsFromCart.setDate(sdf.format(date));
 
         logger.info("<<<< Comparising items in cart >>>>");
         assertThat(cart).usingRecursiveComparison().isEqualTo(cartStatusOnConfirmationPage);
@@ -137,18 +143,26 @@ public class CartTests extends BaseTest {
         assertThat(orderConfirmationPage.getShippingMethod()).isEqualTo("My carrier");
 
         String orderReferenceFromConfirmationPage = orderConfirmationPage.getOrderReference();
-        String orderReferenceFromOrderHistory = checkOrderReferenceNumber();
+        String orderReferenceFromOrderHistory = checkOrderReferenceNumber(orderReferenceFromConfirmationPage);
 
         logger.info("<<<< Comparising order reference >>>>");
         assertThat(orderReferenceFromConfirmationPage).isEqualTo(orderReferenceFromOrderHistory);
+
+        orderDetailsFromCart.setTotalPrice(cart.getTotalCost());
+        orderDetailsFromCart.setPaymentStatus("Awaiting check payment");
+//        orderDetailsFromCart.setDeliveryAddress(user);
+//        orderDetailsFromCart.setInvoiceAddress(user);
+        logger.info("<<<< Comparising order history details >>>>");
+        OrderDetails orderDetailsFromOrderHistoryPage = createOrderDetailsFromOrderHistoryPage();
+        assertThat(orderDetailsFromCart).usingRecursiveComparison().isEqualTo(orderDetailsFromOrderHistoryPage);
     }
 
-    private void logIn() {
+    private void logIn(User user) {
         HeaderPage headerPage = new HeaderPage(driver);
         LoginPage loginPage = new LoginPage(driver);
 
         headerPage.goToSignInPage();
-        loginPage.loginAlreadyCreatedUser();
+        loginPage.loginAlreadyCreatedUser(user);
         headerPage.returnToHomePage();
     }
 
@@ -194,11 +208,62 @@ public class CartTests extends BaseTest {
     private void confirmOrder() {
         BillingAddressPage billingAddressPage = new BillingAddressPage(driver);
 
-        billingAddressPage.fillBillingForm();
+        billingAddressPage.checkIfInvoiceAddressAlreadyExists();
+        billingAddressPage.fillBillingForm(user);
         billingAddressPage.confirmDeliveryOption();
         billingAddressPage.selectPayByCheckOption();
         billingAddressPage.acceptTermsAndConditions();
         billingAddressPage.placeOrder();
+    }
 
+    private String checkOrderReferenceNumber(String orderReferenceFromConfirmationPage) {
+        HeaderPage headerPage = new HeaderPage(driver);
+        AccountPage accountPage = new AccountPage(driver);
+        OrderHistoryPage orderHistoryPage = new OrderHistoryPage(driver);
+        OrderDetailsPage orderDetailsPage = new OrderDetailsPage(driver);
+
+        headerPage.goToAccountPage();
+        accountPage.goToOrderHistoryPage();
+
+        List<OrderHistoryRow> allOrderHistoryRows = orderHistoryPage.getAllOrderHistoryRows();
+        Map<Integer, OrderHistoryRow> orders = getOrderHistoryByOrderReference(allOrderHistoryRows, orderReferenceFromConfirmationPage);
+
+        if(orders.isEmpty()){
+            return StringUtils.EMPTY;
+        }
+        OrderHistoryRow order = orders.entrySet().iterator().next().getValue();
+        orderHistoryPage.goToOrderHistoryDetailPage(order);
+        return orderDetailsPage.getOrderReference();
+    }
+
+    private Map<Integer, OrderHistoryRow> getOrderHistoryByOrderReference(List<OrderHistoryRow> allOrderHistoryRows, String orderReferenceFromConfirmationPage){
+        Map<Integer, OrderHistoryRow> orders = new HashMap<>();
+        for (int i = 0; i < allOrderHistoryRows.size(); i++) {
+            if(allOrderHistoryRows.get(i).getOrderReference().equalsIgnoreCase(orderReferenceFromConfirmationPage)){
+                orders.put(i, allOrderHistoryRows.get(i));
+            }
+        }
+        logger.info("There is no order in Order History Page with " + orderReferenceFromConfirmationPage + " order reference.");
+        return orders;
+    }
+
+    private OrderDetails createOrderDetailsFromOrderHistoryPage() {
+        OrderDetailsPage orderDetailsPage = new OrderDetailsPage(driver);
+        OrderDetails orderDetails = new OrderDetails();
+
+        String date = orderDetailsPage.getDate();
+        double totalPrice = orderDetailsPage.getTotalPrice();
+        String paymentStatus = orderDetailsPage.getPaymentStatus();
+        //TODO te adresy dobrze wypełnić i zobaczyć co on tam beirze
+        String deliveryAddress = orderDetailsPage.getDeliveryAddress();
+        String invoiceAddress = orderDetailsPage.getInvoiceAddress();
+
+        orderDetails.setDate(date);
+        orderDetails.setTotalPrice(totalPrice);
+        orderDetails.setPaymentStatus(paymentStatus);
+        orderDetails.setDeliveryAddress(deliveryAddress);
+        orderDetails.setInvoiceAddress(invoiceAddress);
+
+        return orderDetails;
     }
 }

@@ -69,8 +69,17 @@ public class PageBase {
         return elements.get(new Random().nextInt(elements.size()));
     }
 
-    public double getPriceFromText(String text){
+    public double getPriceFromText(String text) {
         String substring = text.substring(text.indexOf("$") + 1).trim();
         return Double.parseDouble(substring);
+    }
+
+    public boolean isElementPresent(WebElement element) {
+        try {
+            element.isDisplayed();
+            return true;
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return false;
+        }
     }
 }

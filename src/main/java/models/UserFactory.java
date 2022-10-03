@@ -50,8 +50,8 @@ public class UserFactory {
 
         String name = "Gosia";
         String surname = "So";
-        String email = "email@email.com";
-        String password = "hasło-masło";
+        String email = "goha@sii.pl";
+        String password = "password";
         String birthdate = "04/10/2000";
 
         return new User.UserBuilder()

@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import pages.PageBase;
-import pages.cart.SingleItemCartPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class OrderConfirmationPage extends PageBase {
     @FindBy(css = "#order-details li:nth-child(3)")
     private WebElement shippingMethod;
 
-    public double getTotalCostValue(){
+    public double getTotalCostValue() {
         String text = totalCostValue.getText();
         return getPriceFromText(text);
     }
@@ -45,7 +44,7 @@ public class OrderConfirmationPage extends PageBase {
         return allItems;
     }
 
-    public List<Product> getAllItemsOnConfirmationPage(){
+    public List<Product> getAllItemsOnConfirmationPage() {
         List<SingleItemOrderConfirmation> allItems = getAllItems();
         List<Product> products = new ArrayList<>();
         for (SingleItemOrderConfirmation singleProduct : allItems) {
@@ -60,17 +59,17 @@ public class OrderConfirmationPage extends PageBase {
         return products;
     }
 
-    public String getOrderReference(){
+    public String getOrderReference() {
         String text = orderReference.getText().trim();
-        return text.substring(text.indexOf(":")).trim();
+        return text.substring(text.indexOf(":") + 1).trim();
     }
 
-    public String getPaymentMethod(){
+    public String getPaymentMethod() {
         String text = paymentMethod.getText().trim();
         return text.substring(text.indexOf(":") + 1).trim();
     }
 
-    public String getShippingMethod(){
+    public String getShippingMethod() {
         String text = shippingMethod.getText().trim();
         return text.substring(text.indexOf(":") + 1, text.indexOf("\n")).trim();
     }

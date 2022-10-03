@@ -1,5 +1,6 @@
 package pages.cart;
 
+import models.User;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -46,23 +47,31 @@ public class BillingAddressPage extends PageBase {
     @FindBy(css = "#payment-confirmation button")
     private WebElement placeOrderSubmitButton;
 
-//    @FindBy(css = ".js-address-form")
-//    private WebElement invoiceAddressesSection;
+    @FindBy(css = "#invoice-addresses article")
+    private WebElement invoiceAddressesSection;
 
+    @FindBy(css = ".js-address-form .clearfix button")
+    private WebElement buttonContinue;
 
     public void clickBillingAddressDiffersFromShippingAddressButton() {
         click(billingAddressDiffersFromShippingAddressButton);
     }
 
-    public void fillBillingForm() {
-        clickBillingAddressDiffersFromShippingAddressButton();
-        waitToBeVisible(adressInput);
-//        waitToBeVisible(invoiceAddressesSection);
-        fillAddress("ul. sezamkowa");
-        fillCity("Warszawka");
-        selectRandomState();
-        fillPostcode("00000");
-        submitAddressForm();
+    //TODO ustawić tu ten address usera!!!!!!!!!!!!!!
+    public void fillBillingForm(User user) {
+        if(!checkIfInvoiceAddressAlreadyExists()){
+            clickBillingAddressDiffersFromShippingAddressButton();
+            if(!checkIfInvoiceAddressAlreadyExists()) {
+                waitToBeVisible(adressInput);
+                fillAddress("ul. sezamkowa");
+                fillCity("Warszawka");
+                selectRandomState();
+                fillPostcode("00000");
+                submitAddressForm();
+            }else{
+                click(buttonContinue);
+            }
+        }
     }
 
     public void fillAddress(String address) {
@@ -100,5 +109,13 @@ public class BillingAddressPage extends PageBase {
 
     public void placeOrder() {
         click(placeOrderSubmitButton);
+    }
+
+    public boolean checkIfInvoiceAddressAlreadyExists(){
+        if(isElementPresent(invoiceAddressesSection)){
+            click(invoiceAddressesSection);
+            return true;
+        }
+        return false;
     }
 }
