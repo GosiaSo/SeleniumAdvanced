@@ -4,15 +4,18 @@ import basetest.BaseTest;
 import models.Cart;
 import models.Product;
 import models.ProductFactory;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pages.account.AccountPage;
 import pages.cart.BillingAddressPage;
 import pages.cart.CartPopupPage;
 import pages.cart.ShoppingCartPage;
+import pages.cart.orderconfirmation.OrderConfirmationPage;
 import pages.common.HeaderPage;
 import pages.common.ProductPage;
 import pages.common.ProductsListPage;
@@ -117,25 +120,79 @@ public class CartTests extends BaseTest {
     @ValueSource(strings = "THE BEST IS YET POSTER")
     @Tag("cart")
     @Tag("regression")
-    void checkout() {
+    void checkout(String product) {
+        OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
 
+        logIn();
+        Cart cart = addProductToCart(product);
+
+        confirmOrder();
+        Cart cartStatusOnConfirmationPage = getCartStatusOnConfirmationPage();
+
+        logger.info("<<<< Comparising items in cart >>>>");
+        assertThat(cart).usingRecursiveComparison().isEqualTo(cartStatusOnConfirmationPage);
+
+        logger.info("<<<< Comparising payment ans shipping method >>>>");
+        assertThat(orderConfirmationPage.getPaymentMethod()).isEqualTo("Payments by check");
+        assertThat(orderConfirmationPage.getShippingMethod()).isEqualTo("My carrier");
+
+        String orderReferenceFromConfirmationPage = orderConfirmationPage.getOrderReference();
+        String orderReferenceFromOrderHistory = checkOrderReferenceNumber();
+
+        logger.info("<<<< Comparising order reference >>>>");
+        assertThat(orderReferenceFromConfirmationPage).isEqualTo(orderReferenceFromOrderHistory);
+    }
+
+    private void logIn() {
         HeaderPage headerPage = new HeaderPage(driver);
+        LoginPage loginPage = new LoginPage(driver);
+
+        headerPage.goToSignInPage();
+        loginPage.loginAlreadyCreatedUser();
+        headerPage.returnToHomePage();
+    }
+
+    private Cart addProductToCart(String product) {
         ProductsListPage productsListPage = new ProductsListPage(driver);
         CartPopupPage cartPopupPage = new CartPopupPage(driver);
         ProductPage productPage = new ProductPage(driver);
         ShoppingCartPage shoppingCartPage = new ShoppingCartPage(driver);
-        LoginPage loginPage = new LoginPage(driver);
-        BillingAddressPage billingAddressPage = new BillingAddressPage(driver);
 
-        headerPage.goToSignInPage();
-        loginPage.loginAlreadyCreatedUser();
-
-        headerPage.returnToHomePage();
-        productsListPage.openSpecificProduct("THE BEST IS YET POSTER");
+        productsListPage.openSpecificProduct(product);
         productPage.addToCartProduct();
+        Cart cart = getInfoAboutItemAddedToCart();
 
         cartPopupPage.clickProceedToCheckoutButton();
         shoppingCartPage.proceedToCheckout();
+
+        return cart;
+    }
+
+    private Cart getInfoAboutItemAddedToCart() {
+        CartPopupPage cartPopupPage = new CartPopupPage(driver);
+
+        String name = cartPopupPage.getNameOfProduct();
+        double price = cartPopupPage.getPriceOfProduct();
+        int quantity = cartPopupPage.getQuantityOfProduct();
+        double totalItemsValue = cartPopupPage.getTotalItemsValue();
+
+        Product product = new Product(name, price, quantity, totalItemsValue);
+        List<Product> products = new ArrayList<>();
+        Cart cart = new Cart(products, totalItemsValue);
+        cart.addToList(product);
+        return cart;
+    }
+
+    private Cart getCartStatusOnConfirmationPage() {
+        OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
+        List<Product> allItemsOnConfirmationPage = orderConfirmationPage.getAllItemsOnConfirmationPage();
+        double totalItemsValue = orderConfirmationPage.getTotalCostValue();
+
+        return new Cart(allItemsOnConfirmationPage, totalItemsValue);
+    }
+
+    private void confirmOrder() {
+        BillingAddressPage billingAddressPage = new BillingAddressPage(driver);
 
         billingAddressPage.fillBillingForm();
         billingAddressPage.confirmDeliveryOption();
