@@ -22,6 +22,8 @@ import pages.common.ProductPage;
 import pages.common.ProductsListPage;
 import pages.signin.LoginPage;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -31,16 +33,23 @@ public class CartTests extends BaseTest {
     private static final Logger logger = LoggerFactory.getLogger(CartTests.class);
     private static final User user = new UserFactory().getAlreadyRegisteredUser();
 
+    HeaderPage headerPage = new HeaderPage(driver);
+    AccountPage accountPage = new AccountPage(driver);
+    LoginPage loginPage = new LoginPage(driver);
+    ProductsListPage productsListPage = new ProductsListPage(driver);
+    CartPopupPage cartPopupPage = new CartPopupPage(driver);
+    ProductPage productPage = new ProductPage(driver);
+    ShoppingCartPage shoppingCartPage = new ShoppingCartPage(driver);
+    OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
+    OrderDetails orderDetailsFromCart = new OrderDetails();
+    OrderDetailsPage orderDetailsPage = new OrderDetailsPage(driver);
+    OrderHistoryPage orderHistoryPage = new OrderHistoryPage(driver);
+
     @ParameterizedTest
     @Tag("cart")
     @Tag("regression")
     @ValueSource(strings = "THE BEST IS YET POSTER")
     void checkAddProductsToCart(String product) {
-
-        HeaderPage headerPage = new HeaderPage(driver);
-        ProductsListPage productsListPage = new ProductsListPage(driver);
-        CartPopupPage cartPopupPage = new CartPopupPage(driver);
-        ProductPage productPage = new ProductPage(driver);
 
         headerPage.selectCategory("ART");
         productsListPage.openSpecificProduct(product);
@@ -77,34 +86,25 @@ public class CartTests extends BaseTest {
     @Tag("cart")
     @Tag("regression")
     void basketGenericTest() {
-
-        HeaderPage headerPage = new HeaderPage(driver);
-        ProductsListPage productsListPage = new ProductsListPage(driver);
-        CartPopupPage cartPopupPage = new CartPopupPage(driver);
-        ProductPage productPage = new ProductPage(driver);
-        ShoppingCartPage shoppingCartPage = new ShoppingCartPage(driver);
-
         List<Product> products = new ArrayList<>();
-        double totalPrice = 0;
-//TODO ZMIENIĆ Z POWROTEM PĘTLE NA 5!!!!!!!!!!!!!!!!!!!!!!
-        for (int i = 0; i < 2; i++) {
 
-            productsListPage.openRandomProduct();
-            productPage.setRandomQuantity();
-            productPage.addToCartProduct();
+        for (int i = 0; i < 5; i++) {
+            Product product = addRandomProductToBasket(products);
 
-            ProductFactory productFactory = new ProductFactory();
-            Product product = productFactory.getProductInfo(cartPopupPage);
-            totalPrice = product.getTotalPrice();
+            if (Objects.isNull(product)) {
+                headerPage.returnToHomePage();
+                continue;
+            }
+            logger.info("Adding item to basket: " + product.getName());
             products.add(product);
 
-            cartPopupPage.closePopupCart();
             headerPage.returnToHomePage();
         }
 
         headerPage.goToCartPage();
-        totalPrice = totalPrice + shoppingCartPage.getShippingCost();
-        Cart actualCart = new Cart(products, totalPrice);
+        double totalPrice = products.stream().mapToDouble(Product::getTotalPrice).sum() + shoppingCartPage.getShippingCost();
+        totalPrice = setPrecision(totalPrice);
+        Cart expectedCart = new Cart(products, totalPrice);
 
         headerPage.goToCartPage();
 
@@ -112,9 +112,21 @@ public class CartTests extends BaseTest {
         double totalShoppingCartValue = shoppingCartPage.getTotalCartValue();
         Cart shoppingCart = new Cart(productInShoppingCartPage, totalShoppingCartValue);
 
+        assertThat(shoppingCart).usingRecursiveComparison().isEqualTo(expectedCart);
 
-        // porównanie obiektów całych
-        assertThat(actualCart).usingRecursiveComparison().isEqualTo(shoppingCart);
+        for (Product product : products) {
+            headerPage.goToCartPage();
+
+            logger.info("<<<< Removing item from basket: " + product.getName() + ">>>>");
+            shoppingCartPage.removeFirstProductOnList();
+            productInShoppingCartPage.remove(product);
+
+            assertThat(shoppingCart).usingRecursiveComparison().isEqualTo(expectedCart);
+        }
+
+        String emptyBasketLabel = shoppingCartPage.getEmptyBasketLabel();
+        logger.info("<<<< Checking empty basket label >>>>");
+        assertThat(emptyBasketLabel).isEqualTo("There are no more items in your cart");
     }
 
     @ParameterizedTest
@@ -122,8 +134,6 @@ public class CartTests extends BaseTest {
     @Tag("cart")
     @Tag("regression")
     void checkout(String product) {
-        OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
-        OrderDetails orderDetailsFromCart = new OrderDetails();
 
         logIn(user);
         Cart cart = addProductToCart(product);
@@ -157,19 +167,38 @@ public class CartTests extends BaseTest {
     }
 
     private void logIn(User user) {
-        HeaderPage headerPage = new HeaderPage(driver);
-        LoginPage loginPage = new LoginPage(driver);
 
         headerPage.goToSignInPage();
         loginPage.loginAlreadyCreatedUser(user);
         headerPage.returnToHomePage();
     }
 
+    private Product addRandomProductToBasket(List<Product> products) {
+        productsListPage.openRandomProduct();
+
+        String name = productPage.getName();
+
+        for (Product product : products) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                productPage.setRandomQuantity();
+                logger.info("Changing quantity of : " + product.getName());
+                productPage.addToCartProduct();
+                product.setTotalPrice(cartPopupPage.getCostOfAddedItems());
+                product.setQuantity(cartPopupPage.getQuantityOfProduct());
+                cartPopupPage.closePopupCart();
+                return null;
+            }
+        }
+        productPage.setRandomQuantity();
+        productPage.addToCartProduct();
+        ProductFactory productFactory = new ProductFactory();
+        Product product = productFactory.getProductInfo(cartPopupPage);
+        cartPopupPage.closePopupCart();
+
+        return product;
+    }
+
     private Cart addProductToCart(String product) {
-        ProductsListPage productsListPage = new ProductsListPage(driver);
-        CartPopupPage cartPopupPage = new CartPopupPage(driver);
-        ProductPage productPage = new ProductPage(driver);
-        ShoppingCartPage shoppingCartPage = new ShoppingCartPage(driver);
 
         productsListPage.openSpecificProduct(product);
         productPage.addToCartProduct();
@@ -182,7 +211,6 @@ public class CartTests extends BaseTest {
     }
 
     private Cart getInfoAboutItemAddedToCart() {
-        CartPopupPage cartPopupPage = new CartPopupPage(driver);
 
         String name = cartPopupPage.getNameOfProduct();
         double price = cartPopupPage.getPriceOfProduct();
@@ -197,7 +225,6 @@ public class CartTests extends BaseTest {
     }
 
     private Cart getCartStatusOnConfirmationPage() {
-        OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
         List<Product> allItemsOnConfirmationPage = orderConfirmationPage.getAllItemsOnConfirmationPage();
         double totalItemsValue = orderConfirmationPage.getTotalCostValue();
 
@@ -216,10 +243,6 @@ public class CartTests extends BaseTest {
     }
 
     private String checkOrderReferenceNumber(String orderReferenceFromConfirmationPage) {
-        HeaderPage headerPage = new HeaderPage(driver);
-        AccountPage accountPage = new AccountPage(driver);
-        OrderHistoryPage orderHistoryPage = new OrderHistoryPage(driver);
-        OrderDetailsPage orderDetailsPage = new OrderDetailsPage(driver);
 
         headerPage.goToAccountPage();
         accountPage.goToOrderHistoryPage();
@@ -247,13 +270,11 @@ public class CartTests extends BaseTest {
     }
 
     private OrderDetails createOrderDetailsFromOrderHistoryPage() {
-        OrderDetailsPage orderDetailsPage = new OrderDetailsPage(driver);
         OrderDetails orderDetails = new OrderDetails();
 
         String date = orderDetailsPage.getDate();
         double totalPrice = orderDetailsPage.getTotalPrice();
         String paymentStatus = orderDetailsPage.getPaymentStatus();
-        //TODO te adresy dobrze wypełnić i zobaczyć co on tam beirze
         String deliveryAddress = orderDetailsPage.getDeliveryAddress();
         String invoiceAddress = orderDetailsPage.getInvoiceAddress();
 
@@ -264,5 +285,16 @@ public class CartTests extends BaseTest {
         orderDetails.setInvoiceAddress(invoiceAddress);
 
         return orderDetails;
+    }
+
+//    private void removeProductFromCart(List<Product> products, Product product){
+//
+//        products.remove(product);
+//    }
+
+    private double setPrecision(double price) {
+        return BigDecimal.valueOf(price)
+                .setScale(3, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }

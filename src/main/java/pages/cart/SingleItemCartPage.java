@@ -23,6 +23,9 @@ public class SingleItemCartPage {
     @FindBy(css = "span.product-price")
     private WebElement totalPrice;
 
+    @FindBy(css = "a.remove-from-cart ")
+    private WebElement removeItemButton;
+
 
     public String getName() {
         return name.getText().trim();
@@ -42,12 +45,16 @@ public class SingleItemCartPage {
         return Integer.parseInt(value);
     }
 
-    public double getTotalPrice(){
+    public double getTotalPrice() {
         String text = totalPrice.getText();
         if (text.startsWith("$")) {
             String substring = text.substring(text.indexOf("$") + 1).trim();
             return Double.parseDouble(substring);
         }
         return -1;
+    }
+
+    public void removeProduct() {
+
     }
 }

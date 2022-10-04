@@ -23,8 +23,8 @@ public class ProductPage extends PageBase {
     @FindBy(xpath = "//button[contains(@class, 'touchspin-up')]")
     private WebElement quantityButtonUp;
 
-//    @FindBy(css = "div.product-container [itemprop='name']")
-//    private WebElement name;
+    @FindBy(css = "div.product-container [itemprop='name']")
+    private WebElement name;
 
     public void addToCartProduct() {
         click(addToCartButton);
@@ -57,5 +57,9 @@ public class ProductPage extends PageBase {
     public String getNameOfRandomProduct(ProductsListPage productsListPage) {
         WebElement randomProductFromList = productsListPage.getRandomProductFromList();
         return getNameOfProduct(randomProductFromList);
+    }
+
+    public String getName(){
+        return name.getText().trim();
     }
 }

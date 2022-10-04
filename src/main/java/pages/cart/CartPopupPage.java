@@ -5,6 +5,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import pages.PageBase;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class CartPopupPage extends PageBase {
 
     public CartPopupPage(WebDriver driver) {
@@ -58,7 +61,11 @@ public class CartPopupPage extends PageBase {
     }
 
     public double getCostOfAddedItems() {
-        return getQuantityOfProduct() * getPriceOfProduct();
+        waitToBeVisible(quantityOfProduct);
+        double cost = getQuantityOfProduct() * getPriceOfProduct();
+        return BigDecimal.valueOf(cost)
+                .setScale(4, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     public void clickContinueShoppingButton() {

@@ -18,6 +18,18 @@ public class Product {
         return totalPrice;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     public static class ProductBuilder {
         private String name;
         private double quantityPrice;

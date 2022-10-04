@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingCartPage extends PageBase {
-
     public ShoppingCartPage(WebDriver driver) {
         super(driver);
     }
@@ -27,6 +26,12 @@ public class ShoppingCartPage extends PageBase {
     @FindBy(css = ".checkout a")
     private WebElement proceedToCheckoutButton;
 
+    @FindBy(css = "a.remove-from-cart")
+    private WebElement removeItemButton;
+
+    @FindBy(css = "span.no-items")
+    private WebElement emptyBasketLabel;
+
     public double getTotalCartValue() {
         String text = totalValue.getText().trim();
         return getPriceFromText(text);
@@ -37,7 +42,7 @@ public class ShoppingCartPage extends PageBase {
         return getPriceFromText(text);
     }
 
-    public void proceedToCheckout(){
+    public void proceedToCheckout() {
         click(proceedToCheckoutButton);
     }
 
@@ -63,5 +68,14 @@ public class ShoppingCartPage extends PageBase {
             products.add(product);
         }
         return products;
+    }
+
+    public void removeFirstProductOnList() {
+        click(removeItemButton);
+    }
+
+    public String getEmptyBasketLabel() {
+        waitToBeVisible(emptyBasketLabel);
+        return emptyBasketLabel.getText().trim();
     }
 }
