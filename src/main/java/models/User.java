@@ -8,7 +8,6 @@ public class User {
     private SocialTitle socialTitle;
     private String firstName;
     private String lastName;
-
     private String email;
     private String password;
     private String birthdate;
@@ -16,6 +15,10 @@ public class User {
     private boolean customerDataPrivacyConsent;
     private boolean newsletterConsent;
     private boolean generalConditionsConsent;
+    private String address;
+    private String city;
+    private String postalCode;
+    private String deliveryAddress;
 
     public SocialTitle getSocialTitle() {
         return socialTitle;
@@ -57,7 +60,23 @@ public class User {
         return generalConditionsConsent;
     }
 
-    public User(SocialTitle socialTitle, String firstName, String lastName, String email, String password, String birthdate, boolean receiveOffersConsent, boolean customerDataPrivacyConsent, boolean newsletterConsent, boolean generalConditionsConsent) {
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public User(SocialTitle socialTitle, String firstName, String lastName, String email, String password, String birthdate, boolean receiveOffersConsent, boolean customerDataPrivacyConsent, boolean newsletterConsent, boolean generalConditionsConsent, String address, String city, String postalCode, String deliveryAddress) {
         this.socialTitle = socialTitle;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -68,6 +87,10 @@ public class User {
         this.customerDataPrivacyConsent = customerDataPrivacyConsent;
         this.newsletterConsent = newsletterConsent;
         this.generalConditionsConsent = generalConditionsConsent;
+        this.address = address;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.deliveryAddress = deliveryAddress;
     }
 
     @Override
@@ -83,6 +106,10 @@ public class User {
                 ", customerDataPrivacyConsent=" + customerDataPrivacyConsent +
                 ", newsletterConsent=" + newsletterConsent +
                 ", generalConditionsConsent=" + generalConditionsConsent +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
                 '}';
     }
 
@@ -111,6 +138,10 @@ public class User {
         private boolean customerDataPrivacyConsent;
         private boolean newsletterConsent;
         private boolean generalConditionsConsent;
+        private String address;
+        private String city;
+        private String postalCode;
+        private String deliveryAddress;
 
         public UserBuilder setSocialTitle(SocialTitle socialTitle) {
             this.socialTitle = socialTitle;
@@ -162,8 +193,29 @@ public class User {
             return this;
         }
 
+        public UserBuilder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public UserBuilder setCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public UserBuilder setPostalCode(String postalCode) {
+            this.postalCode = postalCode;
+            return this;
+        }
+
+        public UserBuilder setDeliveryAddress(String deliveryAddress) {
+            this.deliveryAddress = deliveryAddress;
+            return this;
+        }
+
         public User build() {
-            return new User(socialTitle, firstName, lastName, email, password, birthdate, receiveOffersConsent, customerDataPrivacyConsent, newsletterConsent, generalConditionsConsent);
+            return new User(socialTitle, firstName, lastName, email, password, birthdate, receiveOffersConsent, customerDataPrivacyConsent, newsletterConsent, generalConditionsConsent, address, city, postalCode, deliveryAddress);
         }
     }
 }
+

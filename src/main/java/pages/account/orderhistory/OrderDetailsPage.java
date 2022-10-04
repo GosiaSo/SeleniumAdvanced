@@ -40,24 +40,26 @@ public class OrderDetailsPage extends PageBase {
 
     public double getTotalPrice() {
         String text = totalPrice.getText().trim();
-       return getPriceFromText(text);
+        return getPriceFromText(text);
     }
 
-    public String getPaymentStatus(){
+    public String getPaymentStatus() {
         return paymentStatus.getText().trim();
     }
 
-    public String getDeliveryAddress(){
-        return deliveryAddress.getText().trim();
+    public String getDeliveryAddress() {
+        String text = deliveryAddress.getText().trim();
+        return text.substring(0, text.indexOf(",")).trim();
     }
 
-    public String getInvoiceAddress(){
-        return invoiceAddress.getText().trim();
+    public String getInvoiceAddress() {
+        String text = deliveryAddress.getText().trim();
+        return text.substring(0, text.indexOf(",")).trim();
     }
 
-    public String getOrderReference(){
+    public String getOrderReference() {
         String text = orderReference.getText().trim();
-        return text.substring(text.indexOf("Reference") + 9, text.indexOf("-")-1).trim();
+        return text.substring(text.indexOf("Reference") + 9, text.indexOf("-") - 1).trim();
     }
 }
 

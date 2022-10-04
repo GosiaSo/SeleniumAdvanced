@@ -150,8 +150,8 @@ public class CartTests extends BaseTest {
 
         orderDetailsFromCart.setTotalPrice(cart.getTotalCost());
         orderDetailsFromCart.setPaymentStatus("Awaiting check payment");
-//        orderDetailsFromCart.setDeliveryAddress(user);
-//        orderDetailsFromCart.setInvoiceAddress(user);
+        orderDetailsFromCart.setDeliveryAddress(user.getDeliveryAddress());
+        orderDetailsFromCart.setInvoiceAddress(user.getDeliveryAddress());
         logger.info("<<<< Comparising order history details >>>>");
         OrderDetails orderDetailsFromOrderHistoryPage = createOrderDetailsFromOrderHistoryPage();
         assertThat(orderDetailsFromCart).usingRecursiveComparison().isEqualTo(orderDetailsFromOrderHistoryPage);
@@ -228,7 +228,7 @@ public class CartTests extends BaseTest {
         List<OrderHistoryRow> allOrderHistoryRows = orderHistoryPage.getAllOrderHistoryRows();
         Map<Integer, OrderHistoryRow> orders = getOrderHistoryByOrderReference(allOrderHistoryRows, orderReferenceFromConfirmationPage);
 
-        if(orders.isEmpty()){
+        if (orders.isEmpty()) {
             return StringUtils.EMPTY;
         }
         OrderHistoryRow order = orders.entrySet().iterator().next().getValue();
@@ -236,10 +236,10 @@ public class CartTests extends BaseTest {
         return orderDetailsPage.getOrderReference();
     }
 
-    private Map<Integer, OrderHistoryRow> getOrderHistoryByOrderReference(List<OrderHistoryRow> allOrderHistoryRows, String orderReferenceFromConfirmationPage){
+    private Map<Integer, OrderHistoryRow> getOrderHistoryByOrderReference(List<OrderHistoryRow> allOrderHistoryRows, String orderReferenceFromConfirmationPage) {
         Map<Integer, OrderHistoryRow> orders = new HashMap<>();
         for (int i = 0; i < allOrderHistoryRows.size(); i++) {
-            if(allOrderHistoryRows.get(i).getOrderReference().equalsIgnoreCase(orderReferenceFromConfirmationPage)){
+            if (allOrderHistoryRows.get(i).getOrderReference().equalsIgnoreCase(orderReferenceFromConfirmationPage)) {
                 orders.put(i, allOrderHistoryRows.get(i));
             }
         }

@@ -53,6 +53,14 @@ public class UserFactory {
         String email = "goha@sii.pl";
         String password = "password";
         String birthdate = "04/10/2000";
+        String city = "Warszawka";
+        String postalCode = "0000";
+        String address = "sezamkowa";
+
+        StringBuilder builder = new StringBuilder();
+        String deliveryAddress = builder.append(name).append(" ").append(surname).append("\n")
+                .append("ul. ").append(address).append("\n")
+                .append(city).toString().trim();
 
         return new User.UserBuilder()
                 .setSocialTitle(MRS)
@@ -65,6 +73,10 @@ public class UserFactory {
                 .setCustomerDataPrivacyConsent(false)
                 .setNewsletterConsent(false)
                 .setGeneralConditionsConsent(true)
+                .setAddress(address)
+                .setCity(city)
+                .setPostalCode(postalCode)
+                .setDeliveryAddress(deliveryAddress)
                 .build();
     }
 }
