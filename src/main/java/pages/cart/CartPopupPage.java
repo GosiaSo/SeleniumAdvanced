@@ -28,9 +28,6 @@ public class CartPopupPage extends PageBase {
     @FindBy(css = ".modal-content .cart-content p")
     private WebElement quantityOfProductsInCart;
 
-    @FindBy(xpath = "//span[contains(@class, 'subtotal value')]")
-    private WebElement totalProductsValue;
-
     @FindBy(css = "span.cart-products-count")
     private WebElement productsCountCartIconHeader;
 
@@ -60,9 +57,8 @@ public class CartPopupPage extends PageBase {
         return Integer.parseInt(substring);
     }
 
-    public double getTotalItemsValue() {
-        String text = totalProductsValue.getText().trim();
-        return getPriceFromText(text);
+    public double getCostOfAddedItems() {
+        return getQuantityOfProduct() * getPriceOfProduct();
     }
 
     public void clickContinueShoppingButton() {
@@ -80,7 +76,7 @@ public class CartPopupPage extends PageBase {
         return Integer.parseInt(substring);
     }
 
-    public void closePopupCart(){
+    public void closePopupCart() {
         click(closeButton);
     }
 }

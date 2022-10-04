@@ -38,14 +38,6 @@ public class OrderHistoryRow {
         return orderReference.getText().trim();
     }
 
-//    public String getOrderReference(Map<Integer, OrderHistoryRow> orders){
-//        Integer key = orders.entrySet().iterator().next().getKey();
-//        for (int i = 0; i < orderRefereneces.size(); i++) {
-//            return orderRefereneces.get(key).getText().trim();
-//        }
-//        return StringUtils.EMPTY;
-//    }
-
     public String getDate() {
         return date.getText().trim();
     }

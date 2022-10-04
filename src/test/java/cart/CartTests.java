@@ -63,7 +63,7 @@ public class CartTests extends BaseTest {
         logger.info("Selected product: 3" + " | Actual product: " + actualQuantityOfProductsInCart);
         assertThat(actualQuantityOfProductsInCart).isEqualTo(3);
 
-        double actualTotalCartValue = cartPopupPage.getTotalItemsValue();
+        double actualTotalCartValue = cartPopupPage.getCostOfAddedItems();
         logger.info("Selected product: 87.0" + " | Actual product: " + actualTotalCartValue);
         assertThat(actualTotalCartValue).isEqualTo(87.0);
 
@@ -76,7 +76,7 @@ public class CartTests extends BaseTest {
     @Test
     @Tag("cart")
     @Tag("regression")
-    void xxxxx() {
+    void basketGenericTest() {
 
         HeaderPage headerPage = new HeaderPage(driver);
         ProductsListPage productsListPage = new ProductsListPage(driver);
@@ -87,7 +87,7 @@ public class CartTests extends BaseTest {
         List<Product> products = new ArrayList<>();
         double totalPrice = 0;
 //TODO ZMIENIĆ Z POWROTEM PĘTLE NA 5!!!!!!!!!!!!!!!!!!!!!!
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 2; i++) {
 
             productsListPage.openRandomProduct();
             productPage.setRandomQuantity();
@@ -95,7 +95,7 @@ public class CartTests extends BaseTest {
 
             ProductFactory productFactory = new ProductFactory();
             Product product = productFactory.getProductInfo(cartPopupPage);
-            totalPrice = totalPrice + product.getTotalPrice();
+            totalPrice = product.getTotalPrice();
             products.add(product);
 
             cartPopupPage.closePopupCart();
@@ -104,9 +104,8 @@ public class CartTests extends BaseTest {
 
         headerPage.goToCartPage();
         totalPrice = totalPrice + shoppingCartPage.getShippingCost();
-        Cart actualCart = new Cart(products, totalPrice); // obiekt stworzony z produktów dodawanych do koszyka w trakcie
+        Cart actualCart = new Cart(products, totalPrice);
 
-        // tutaj tworzę nowy obiekt Cart z tej strony shopping cart i porównam
         headerPage.goToCartPage();
 
         List<Product> productInShoppingCartPage = shoppingCartPage.getAllProductsFromShoppingCart();
@@ -188,7 +187,7 @@ public class CartTests extends BaseTest {
         String name = cartPopupPage.getNameOfProduct();
         double price = cartPopupPage.getPriceOfProduct();
         int quantity = cartPopupPage.getQuantityOfProduct();
-        double totalItemsValue = cartPopupPage.getTotalItemsValue();
+        double totalItemsValue = cartPopupPage.getCostOfAddedItems();
 
         Product product = new Product(name, price, quantity, totalItemsValue);
         List<Product> products = new ArrayList<>();

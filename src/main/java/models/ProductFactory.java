@@ -8,7 +8,7 @@ public class ProductFactory {
         String name = cartPopupPage.getNameOfProduct();
         double quantityPrice = cartPopupPage.getPriceOfProduct();
         int quantity = cartPopupPage.getQuantityOfProduct();
-        double totalPrice = cartPopupPage.getTotalItemsValue();
+        double totalPrice = cartPopupPage.getCostOfAddedItems();
 
         return new Product.ProductBuilder()
                 .setName(name)
