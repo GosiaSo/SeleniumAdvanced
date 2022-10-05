@@ -1,6 +1,6 @@
 package cart;
 
-import basetest.BaseTest;
+import basetest.Pages;
 import models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Tag;
@@ -9,18 +9,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pages.account.AccountPage;
-import pages.account.orderhistory.OrderDetailsPage;
-import pages.account.orderhistory.orderhistorytable.OrderHistoryPage;
 import pages.account.orderhistory.orderhistorytable.OrderHistoryRow;
 import pages.cart.BillingAddressPage;
-import pages.cart.CartPopupPage;
-import pages.cart.ShoppingCartPage;
-import pages.cart.orderconfirmation.OrderConfirmationPage;
-import pages.common.HeaderPage;
-import pages.common.ProductPage;
-import pages.common.ProductsListPage;
-import pages.signin.LoginPage;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,21 +19,9 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartTests extends BaseTest {
+public class CartTests extends Pages {
     private static final Logger logger = LoggerFactory.getLogger(CartTests.class);
     private static final User user = new UserFactory().getAlreadyRegisteredUser();
-
-    HeaderPage headerPage = new HeaderPage(driver);
-    AccountPage accountPage = new AccountPage(driver);
-    LoginPage loginPage = new LoginPage(driver);
-    ProductsListPage productsListPage = new ProductsListPage(driver);
-    CartPopupPage cartPopupPage = new CartPopupPage(driver);
-    ProductPage productPage = new ProductPage(driver);
-    ShoppingCartPage shoppingCartPage = new ShoppingCartPage(driver);
-    OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
-    OrderDetails orderDetailsFromCart = new OrderDetails();
-    OrderDetailsPage orderDetailsPage = new OrderDetailsPage(driver);
-    OrderHistoryPage orderHistoryPage = new OrderHistoryPage(driver);
 
     @ParameterizedTest
     @Tag("cart")
