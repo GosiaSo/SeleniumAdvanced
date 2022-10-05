@@ -31,4 +31,12 @@ public class Cart {
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "products=" + products +
+                ", totalCost=" + totalCost +
+                '}';
+    }
 }

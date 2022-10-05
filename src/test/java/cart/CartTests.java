@@ -112,6 +112,7 @@ public class CartTests extends BaseTest {
         double totalShoppingCartValue = shoppingCartPage.getTotalCartValue();
         Cart shoppingCart = new Cart(productInShoppingCartPage, totalShoppingCartValue);
 
+        logger.info("<<<< Comparising items in cart >>>>");
         assertThat(shoppingCart).usingRecursiveComparison().isEqualTo(expectedCart);
 
         for (Product product : products) {
@@ -287,14 +288,7 @@ public class CartTests extends BaseTest {
         return orderDetails;
     }
 
-//    private void removeProductFromCart(List<Product> products, Product product){
-//
-//        products.remove(product);
-//    }
-
     private double setPrecision(double price) {
-        return BigDecimal.valueOf(price)
-                .setScale(3, RoundingMode.HALF_UP)
-                .doubleValue();
+        return BigDecimal.valueOf(price).setScale(3, RoundingMode.HALF_UP).doubleValue();
     }
 }

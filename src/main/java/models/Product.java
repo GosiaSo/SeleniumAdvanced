@@ -30,6 +30,16 @@ public class Product {
         this.totalPrice = totalPrice;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", quantityPrice=" + quantityPrice +
+                ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
     public static class ProductBuilder {
         private String name;
         private double quantityPrice;

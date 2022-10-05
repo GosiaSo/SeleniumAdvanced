@@ -57,18 +57,17 @@ public class BillingAddressPage extends PageBase {
         click(billingAddressDiffersFromShippingAddressButton);
     }
 
-    //TODO ustawić tu ten address usera!!!!!!!!!!!!!!
     public void fillBillingForm(User user) {
-        if(!checkIfInvoiceAddressAlreadyExists()){
+        if (!checkIfInvoiceAddressAlreadyExists()) {
             clickBillingAddressDiffersFromShippingAddressButton();
-            if(!checkIfInvoiceAddressAlreadyExists()) {
+            if (!checkIfInvoiceAddressAlreadyExists()) {
                 waitToBeVisible(adressInput);
-                fillAddress("ul. sezamkowa");
-                fillCity("Warszawka");
+                fillAddress(user.getAddress());
+                fillCity(user.getCity());
                 selectRandomState();
-                fillPostcode("00000");
+                fillPostcode(user.getPostalCode());
                 submitAddressForm();
-            }else{
+            } else {
                 click(buttonContinue);
             }
         }
@@ -111,8 +110,8 @@ public class BillingAddressPage extends PageBase {
         click(placeOrderSubmitButton);
     }
 
-    public boolean checkIfInvoiceAddressAlreadyExists(){
-        if(isElementPresent(invoiceAddressesSection)){
+    public boolean checkIfInvoiceAddressAlreadyExists() {
+        if (isElementPresent(invoiceAddressesSection)) {
             click(invoiceAddressesSection);
             return true;
         }
